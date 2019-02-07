@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'groovy'
+}
+
+group 'testFX-spock'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testRuntimeOnly  group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.3.2'
+
+    testCompile group: 'org.testfx', name: 'testfx-core', version: '4.0.15-alpha'
+    testCompile group: 'org.testfx', name: 'openjfx-monocle', version: '8u76-b04'
+    testCompile group: 'org.testfx', name: 'testfx-spock', version: '4.0.15-alpha'
+
+    testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.16'
+}
+
+test {
+    dependsOn(clean)
+    
+    useJUnit{
+        testLogging {
+            showStandardStreams = true
+        }
+    }
+    
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+    
+    failFast = false
+    
+    onOutput { descriptor, event ->
+        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+    }
+}
+
